@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>f(t) = 0.4 · sin(2π · 5.59 · t)</title>
+  <title>Respuesta Mano-Muñeca</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -16,74 +16,117 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
+      padding: 32px 16px 48px;
+      gap: 32px;
     }
 
-    h1 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: clamp(14px, 3.5vw, 20px);
-      font-weight: 400;
-      color: #4ecda4;
-      letter-spacing: 0.05em;
-      margin-bottom: 6px;
+    header {
       text-align: center;
     }
 
-    .subtitle {
-      font-size: 12px;
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(16px, 4vw, 22px);
+      font-weight: 700;
+      color: #e0e6f0;
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 13px;
       color: #4a5568;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .section {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      margin-bottom: 28px;
-      text-align: center;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .pill-entrada {
+      background: rgba(216,90,48,0.15);
+      color: #ff8c6b;
+      border: 1px solid rgba(216,90,48,0.3);
+    }
+    .pill-salida {
+      background: rgba(78,205,164,0.12);
+      color: #4ecda4;
+      border: 1px solid rgba(78,205,164,0.25);
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(10px, 2.5vw, 13px);
+      color: #6b7a90;
+      letter-spacing: 0.02em;
     }
 
     .card {
       background: #111820;
       border: 1px solid #1e2a38;
       border-radius: 16px;
-      padding: 24px;
-      width: 100%;
-      max-width: 720px;
+      padding: 20px;
     }
 
-    canvas {
-      display: block;
-      width: 100%;
-      border-radius: 8px;
-    }
+    canvas { display: block; width: 100%; border-radius: 6px; }
 
     .controls {
       display: flex;
       align-items: center;
-      gap: 20px;
-      margin-top: 20px;
+      gap: 14px;
+      margin-top: 16px;
       flex-wrap: wrap;
     }
 
     .ctrl-group {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: #6b7a90;
+      gap: 8px;
+    }
+    .ctrl-group label {
+      font-size: 10px;
+      color: #4a5568;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
       font-family: 'JetBrains Mono', monospace;
     }
 
-    .ctrl-group label { color: #4a5568; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
-
     input[type=range] {
       -webkit-appearance: none;
-      width: 100px;
+      width: 90px;
       height: 3px;
       background: #1e2a38;
       border-radius: 2px;
       outline: none;
     }
-    input[type=range]::-webkit-slider-thumb {
+    input[type=range].entrada::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 14px; height: 14px;
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      background: #ff8c6b;
+      cursor: pointer;
+    }
+    input[type=range].salida::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 13px; height: 13px;
       border-radius: 50%;
       background: #4ecda4;
       cursor: pointer;
@@ -91,186 +134,345 @@
 
     .val {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: #4ecda4;
-      min-width: 36px;
+      font-size: 12px;
+      min-width: 34px;
     }
+    .val-entrada { color: #ff8c6b; }
+    .val-salida  { color: #4ecda4; }
 
     .btn {
       background: transparent;
       border: 1px solid #1e2a38;
-      color: #4ecda4;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      padding: 7px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .btn:hover { background: #1e2a38; border-color: #4ecda4; }
-
-    .badge {
-      margin-left: auto;
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      color: #2a3a50;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
       letter-spacing: 0.04em;
+      transition: background 0.15s, border-color 0.15s;
     }
+    .btn-entrada { color: #ff8c6b; }
+    .btn-entrada:hover { background: #1e2a38; border-color: #ff8c6b; }
+    .btn-salida  { color: #4ecda4; }
+    .btn-salida:hover  { background: #1e2a38; border-color: #4ecda4; }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      color: #4a5568;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .legend-dot { width: 9px; height: 9px; border-radius: 2px; }
+
+    .divider {
+      width: 100%;
+      max-width: 720px;
+      height: 1px;
+      background: #1e2a38;
+    }
+
+    .sync-bar {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .sync-bar span {
+      font-size: 11px;
+      color: #4a5568;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .btn-sync {
+      background: transparent;
+      border: 1px solid #1e2a38;
+      color: #e0e6f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 7px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-sync:hover { background: #1e2a38; border-color: #6b7a90; }
   </style>
 </head>
 <body>
 
-  <h1>f(t) = 0.4 · sin(2π · 5.59 · t)</h1>
-  <p class="subtitle">Señal de de entrada</p>
+  <header>
+    <h1>Respuesta Mano-Muñeca</h1>
+    <p>Señal de entrada y señal de salida</p>
+  </header>
 
-  <div class="card">
-    <div style="position: relative; width: 100%; height: 260px;">
-      <canvas id="c"></canvas>
+  <!-- SYNC CONTROLS -->
+  <div class="sync-bar">
+    <span>Control global</span>
+    <button class="btn-sync" id="btnSyncPlay">⏸ Pausar ambas</button>
+    <button class="btn-sync" id="btnSyncReset">↺ Reiniciar ambas</button>
+  </div>
+
+  <!-- ENTRADA -->
+  <div class="section">
+    <div class="section-header">
+      <span class="pill pill-entrada">Entrada</span>
+      <span class="section-title">f(t) = 0.4 · sin(2π · 5.59 · t)</span>
     </div>
-
-    <div class="controls">
-      <button class="btn" id="btnPlay">⏸ Pausar</button>
-
-      <div class="ctrl-group">
-        <label>Velocidad</label>
-        <input type="range" id="speed" min="0.1" max="2" step="0.1" value="0.4">
-        <span class="val" id="speedVal">0.4×</span>
+    <div class="card">
+      <div style="position:relative; width:100%; height:220px;">
+        <canvas id="c1"></canvas>
       </div>
-
-      <div class="ctrl-group">
-        <label>Rastro</label>
-        <input type="range" id="trail" min="0.5" max="3" step="0.5" value="1.5">
-        <span class="val" id="trailVal">1.5 s</span>
+      <div class="controls">
+        <button class="btn btn-entrada" id="btnPlay1">⏸ Pausar</button>
+        <div class="ctrl-group">
+          <label>Velocidad</label>
+          <input type="range" id="speed1" class="entrada" min="0.1" max="2" step="0.1" value="0.4">
+          <span class="val val-entrada" id="speedVal1">0.4×</span>
+        </div>
+        <div class="ctrl-group">
+          <label>Rastro</label>
+          <input type="range" id="trail1" class="entrada" min="0.5" max="3" step="0.5" value="1.5">
+          <span class="val val-entrada" id="trailVal1">1.5 s</span>
+        </div>
       </div>
+    </div>
+  </div>
 
-      <span class="badge">Torque (N·m) / Tiempo (s)</span>
+  <div class="divider"></div>
+
+  <!-- SALIDA -->
+  <div class="section">
+    <div class="section-header">
+      <span class="pill pill-salida">Salida</span>
+      <span class="section-title">θ(t) = 0.13·e⁻³ᵗ·sin(2π·5·t) + 0.067·sin(2π·5.59·t)</span>
+    </div>
+    <div class="card">
+      <div style="position:relative; width:100%; height:220px;">
+        <canvas id="c2"></canvas>
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#4ecda4;"></div>θ(t)
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(100,160,255,0.4); border:1px solid rgba(100,160,255,0.4);"></div>Envolvente ±0.13·e⁻³ᵗ
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-salida" id="btnPlay2">⏸ Pausar</button>
+        <button class="btn btn-salida" id="btnReset2">↺ Reiniciar</button>
+        <div class="ctrl-group">
+          <label>Velocidad</label>
+          <input type="range" id="speed2" class="salida" min="0.1" max="2" step="0.1" value="0.4">
+          <span class="val val-salida" id="speedVal2">0.4×</span>
+        </div>
+        <div class="ctrl-group">
+          <label>Rastro</label>
+          <input type="range" id="trail2" class="salida" min="0.5" max="4" step="0.5" value="2">
+          <span class="val val-salida" id="trailVal2">2.0 s</span>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    const canvas = document.getElementById('c');
-    const ctx = canvas.getContext('2d');
-    const A = 0.4, freq = 5.59;
-    let t = 0, playing = true, speed = 0.4, trailDur = 1.5;
+    // ── CANVAS 1 — ENTRADA ──────────────────────────────────────────
+    const c1 = document.getElementById('c1');
+    const ctx1 = c1.getContext('2d');
+    let t1 = 0, play1 = true, speed1 = 0.4, trail1 = 1.5;
 
-    function resize() {
-      const parent = canvas.parentElement;
-      canvas.width = parent.offsetWidth;
-      canvas.height = parent.offsetHeight;
+    function resizeCanvas(canvas) {
+      canvas.width  = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
     }
-    resize();
-    window.addEventListener('resize', resize);
+    resizeCanvas(c1);
 
-    function draw() {
-      const W = canvas.width, H = canvas.height;
-      const pad = { l: 52, r: 16, t: 14, b: 34 };
-      const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+    function drawEntrada() {
+      const W = c1.width, H = c1.height;
+      const pad = { l:52, r:14, t:12, b:30 };
+      const pw = W-pad.l-pad.r, ph = H-pad.t-pad.b;
+      ctx1.clearRect(0,0,W,H);
+      ctx1.fillStyle = '#0d1520'; ctx1.fillRect(0,0,W,H);
 
-      ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#0d1520';
-      ctx.fillRect(0, 0, W, H);
-
-      const toY = v => pad.t + ph/2 - (v / 0.5) * (ph/2 - 4);
+      const toY = v => pad.t + ph/2 - (v/0.5)*(ph/2-4);
+      const tS = t1 - trail1;
 
       // grid
-      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-      ctx.lineWidth = 0.5;
-      [-0.4,-0.2,0,0.2,0.4].forEach(v => {
-        const y = toY(v);
-        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + pw, y); ctx.stroke();
-      });
+      ctx1.strokeStyle='rgba(255,255,255,0.05)'; ctx1.lineWidth=0.5;
+      [-0.4,-0.2,0,0.2,0.4].forEach(v=>{ ctx1.beginPath(); ctx1.moveTo(pad.l,toY(v)); ctx1.lineTo(pad.l+pw,toY(v)); ctx1.stroke(); });
 
       // axes
-      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-      ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(pad.l, toY(0)); ctx.lineTo(pad.l + pw, toY(0)); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + ph); ctx.stroke();
+      ctx1.strokeStyle='rgba(255,255,255,0.18)'; ctx1.lineWidth=1;
+      ctx1.beginPath(); ctx1.moveTo(pad.l,toY(0)); ctx1.lineTo(pad.l+pw,toY(0)); ctx1.stroke();
+      ctx1.beginPath(); ctx1.moveTo(pad.l,pad.t); ctx1.lineTo(pad.l,pad.t+ph); ctx1.stroke();
 
       // Y labels
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
-      ctx.font = '11px JetBrains Mono, monospace';
-      ctx.textAlign = 'right';
-      [-0.4,-0.2,0,0.2,0.4].forEach(v => {
-        ctx.fillText(v.toFixed(1), pad.l - 8, toY(v) + 4);
-      });
+      ctx1.fillStyle='rgba(255,255,255,0.3)'; ctx1.font='10px JetBrains Mono,monospace'; ctx1.textAlign='right';
+      [-0.4,-0.2,0,0.2,0.4].forEach(v=>{ ctx1.fillText(v.toFixed(1), pad.l-6, toY(v)+4); });
 
       // Y title
-      ctx.save();
-      ctx.translate(13, H/2);
-      ctx.rotate(-Math.PI/2);
-      ctx.textAlign = 'center';
-      ctx.fillStyle = 'rgba(255,255,255,0.25)';
-      ctx.font = '10px Syne, sans-serif';
-      ctx.fillText('Torque (N·m)', 0, 0);
-      ctx.restore();
+      ctx1.save(); ctx1.translate(12,H/2); ctx1.rotate(-Math.PI/2); ctx1.textAlign='center';
+      ctx1.fillStyle='rgba(255,255,255,0.22)'; ctx1.font='10px Syne,sans-serif';
+      ctx1.fillText('Torque (N·m)',0,0); ctx1.restore();
 
-      // wave glow
-      const steps = Math.min(2000, pw * 2);
-      const gradient = ctx.createLinearGradient(pad.l, 0, pad.l + pw, 0);
-      gradient.addColorStop(0, 'rgba(78,205,164,0.1)');
-      gradient.addColorStop(1, 'rgba(78,205,164,0.9)');
-
-      ctx.beginPath();
-      ctx.strokeStyle = gradient;
-      ctx.lineWidth = 2.5;
-      ctx.lineJoin = 'round';
-      for (let i = 0; i <= steps; i++) {
-        const tVal = (t - trailDur) + (i / steps) * trailDur;
-        const v = A * Math.sin(2 * Math.PI * freq * tVal);
-        const x = pad.l + (i / steps) * pw;
-        const y = toY(v);
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      // wave
+      const steps = Math.min(2000,pw*2);
+      const g = ctx1.createLinearGradient(pad.l,0,pad.l+pw,0);
+      g.addColorStop(0,'rgba(255,107,74,0.1)'); g.addColorStop(1,'rgba(255,107,74,0.95)');
+      ctx1.beginPath(); ctx1.strokeStyle=g; ctx1.lineWidth=2; ctx1.lineJoin='round';
+      for(let i=0;i<=steps;i++){
+        const tVal=tS+(i/steps)*trail1;
+        const v=0.4*Math.sin(2*Math.PI*5.59*tVal);
+        const x=pad.l+(i/steps)*pw, y=toY(v);
+        i===0?ctx1.moveTo(x,y):ctx1.lineTo(x,y);
       }
-      ctx.stroke();
+      ctx1.stroke();
 
       // dot
-      const curV = A * Math.sin(2 * Math.PI * freq * t);
-      const dx = pad.l + pw, dy = toY(curV);
-      ctx.beginPath();
-      ctx.arc(dx, dy, 6, 0, Math.PI*2);
-      ctx.fillStyle = '#ff6b4a';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(dx, dy, 10, 0, Math.PI*2);
-      ctx.strokeStyle = 'rgba(255,107,74,0.3)';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
+      const cv=0.4*Math.sin(2*Math.PI*5.59*t1);
+      ctx1.beginPath(); ctx1.arc(pad.l+pw,toY(cv),5,0,Math.PI*2); ctx1.fillStyle='#ff6b4a'; ctx1.fill();
 
-      // X label
-      ctx.fillStyle = 'rgba(255,255,255,0.25)';
-      ctx.font = '10px Syne, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('Tiempo (s)', pad.l + pw/2, H - 4);
-
-      // time readout
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#ff6b4a';
-      ctx.font = '12px JetBrains Mono, monospace';
-      ctx.fillText('t = ' + t.toFixed(3) + ' s', W - pad.r, pad.t + 13);
+      // time
+      ctx1.fillStyle='rgba(255,255,255,0.22)'; ctx1.font='10px Syne,sans-serif'; ctx1.textAlign='center';
+      ctx1.fillText('Tiempo (s)', pad.l+pw/2, H-3);
+      ctx1.textAlign='right'; ctx1.fillStyle='#ff8c6b'; ctx1.font='11px JetBrains Mono,monospace';
+      ctx1.fillText('t = '+t1.toFixed(3)+' s', W-pad.r, pad.t+12);
     }
 
+    // ── CANVAS 2 — SALIDA ───────────────────────────────────────────
+    const c2 = document.getElementById('c2');
+    const ctx2 = c2.getContext('2d');
+    let t2 = 0, play2 = true, speed2 = 0.4, trail2 = 2.0;
+
+    resizeCanvas(c2);
+
+    function theta(t){ return 0.13*Math.exp(-3*t)*Math.sin(2*Math.PI*5*t)+0.067*Math.sin(2*Math.PI*5.59*t); }
+
+    function drawSalida() {
+      const W=c2.width, H=c2.height;
+      const pad={l:56,r:14,t:12,b:30};
+      const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+      ctx2.clearRect(0,0,W,H);
+      ctx2.fillStyle='#0d1520'; ctx2.fillRect(0,0,W,H);
+
+      const maxV=0.15;
+      const toY=v=>pad.t+ph/2-(v/maxV)*(ph/2-4);
+      const tS=t2-trail2;
+
+      // grid
+      ctx2.strokeStyle='rgba(255,255,255,0.05)'; ctx2.lineWidth=0.5;
+      [-0.10,-0.05,0,0.05,0.10].forEach(v=>{ ctx2.beginPath(); ctx2.moveTo(pad.l,toY(v)); ctx2.lineTo(pad.l+pw,toY(v)); ctx2.stroke(); });
+
+      // axes
+      ctx2.strokeStyle='rgba(255,255,255,0.18)'; ctx2.lineWidth=1;
+      ctx2.beginPath(); ctx2.moveTo(pad.l,toY(0)); ctx2.lineTo(pad.l+pw,toY(0)); ctx2.stroke();
+      ctx2.beginPath(); ctx2.moveTo(pad.l,pad.t); ctx2.lineTo(pad.l,pad.t+ph); ctx2.stroke();
+
+      // Y labels
+      ctx2.fillStyle='rgba(255,255,255,0.3)'; ctx2.font='10px JetBrains Mono,monospace'; ctx2.textAlign='right';
+      [-0.10,-0.05,0,0.05,0.10].forEach(v=>{ ctx2.fillText(v.toFixed(2), pad.l-6, toY(v)+4); });
+
+      // Y title
+      ctx2.save(); ctx2.translate(13,H/2); ctx2.rotate(-Math.PI/2); ctx2.textAlign='center';
+      ctx2.fillStyle='rgba(255,255,255,0.22)'; ctx2.font='10px Syne,sans-serif';
+      ctx2.fillText('Desplaz. angular (rad)',0,0); ctx2.restore();
+
+      // envelope fill
+      const eS=Math.min(800,pw);
+      ctx2.beginPath();
+      for(let i=0;i<=eS;i++){ const tv=tS+(i/eS)*trail2; const e=0.13*Math.exp(-3*Math.max(tv,0)); ctx2.lineTo(pad.l+(i/eS)*pw,toY(e)); if(i===0)ctx2.moveTo(pad.l,toY(e)); }
+      for(let i=eS;i>=0;i--){ const tv=tS+(i/eS)*trail2; const e=0.13*Math.exp(-3*Math.max(tv,0)); ctx2.lineTo(pad.l+(i/eS)*pw,toY(-e)); }
+      ctx2.closePath(); ctx2.fillStyle='rgba(100,160,255,0.07)'; ctx2.fill();
+
+      // envelope dashed border
+      ctx2.strokeStyle='rgba(100,160,255,0.22)'; ctx2.lineWidth=1; ctx2.setLineDash([3,4]);
+      [1,-1].forEach(sign=>{
+        ctx2.beginPath();
+        for(let i=0;i<=eS;i++){ const tv=tS+(i/eS)*trail2; const e=sign*0.13*Math.exp(-3*Math.max(tv,0)); const x=pad.l+(i/eS)*pw; i===0?ctx2.moveTo(x,toY(e)):ctx2.lineTo(x,toY(e)); }
+        ctx2.stroke();
+      });
+      ctx2.setLineDash([]);
+
+      // wave
+      const steps=Math.min(2000,pw*2);
+      const g=ctx2.createLinearGradient(pad.l,0,pad.l+pw,0);
+      g.addColorStop(0,'rgba(78,205,164,0.1)'); g.addColorStop(1,'rgba(78,205,164,0.95)');
+      ctx2.beginPath(); ctx2.strokeStyle=g; ctx2.lineWidth=2; ctx2.lineJoin='round';
+      for(let i=0;i<=steps;i++){
+        const tVal=tS+(i/steps)*trail2;
+        const v=tVal<0?0:theta(tVal);
+        const x=pad.l+(i/steps)*pw, y=toY(v);
+        i===0?ctx2.moveTo(x,y):ctx2.lineTo(x,y);
+      }
+      ctx2.stroke();
+
+      // dot
+      const cv=t2<0?0:theta(t2);
+      ctx2.beginPath(); ctx2.arc(pad.l+pw,toY(cv),5,0,Math.PI*2); ctx2.fillStyle='#4ecda4'; ctx2.fill();
+      ctx2.beginPath(); ctx2.arc(pad.l+pw,toY(cv),9,0,Math.PI*2); ctx2.strokeStyle='rgba(78,205,164,0.3)'; ctx2.lineWidth=1.5; ctx2.stroke();
+
+      // time
+      ctx2.fillStyle='rgba(255,255,255,0.22)'; ctx2.font='10px Syne,sans-serif'; ctx2.textAlign='center';
+      ctx2.fillText('Tiempo (s)', pad.l+pw/2, H-3);
+      ctx2.textAlign='right'; ctx2.fillStyle='#4ecda4'; ctx2.font='11px JetBrains Mono,monospace';
+      ctx2.fillText('t = '+t2.toFixed(3)+' s', W-pad.r, pad.t+12);
+    }
+
+    // ── LOOP ────────────────────────────────────────────────────────
     function loop() {
-      if (playing) t += (1/60) * speed;
-      draw();
+      if(play1) t1 += (1/60)*speed1;
+      if(play2) t2 += (1/60)*speed2;
+      drawEntrada();
+      drawSalida();
       requestAnimationFrame(loop);
     }
     loop();
 
-    document.getElementById('btnPlay').addEventListener('click', function() {
-      playing = !playing;
-      this.textContent = playing ? '⏸ Pausar' : '▶ Reanudar';
+    window.addEventListener('resize', ()=>{ resizeCanvas(c1); resizeCanvas(c2); });
+
+    // ── CONTROLS ENTRADA ────────────────────────────────────────────
+    document.getElementById('btnPlay1').addEventListener('click', function(){
+      play1=!play1; this.textContent=play1?'⏸ Pausar':'▶ Reanudar';
+    });
+    document.getElementById('speed1').addEventListener('input', function(){
+      speed1=parseFloat(this.value); document.getElementById('speedVal1').textContent=speed1.toFixed(1)+'×';
+    });
+    document.getElementById('trail1').addEventListener('input', function(){
+      trail1=parseFloat(this.value); document.getElementById('trailVal1').textContent=trail1.toFixed(1)+' s';
     });
 
-    document.getElementById('speed').addEventListener('input', function() {
-      speed = parseFloat(this.value);
-      document.getElementById('speedVal').textContent = speed.toFixed(1) + '×';
+    // ── CONTROLS SALIDA ─────────────────────────────────────────────
+    document.getElementById('btnPlay2').addEventListener('click', function(){
+      play2=!play2; this.textContent=play2?'⏸ Pausar':'▶ Reanudar';
+    });
+    document.getElementById('btnReset2').addEventListener('click', ()=>{ t2=0; });
+    document.getElementById('speed2').addEventListener('input', function(){
+      speed2=parseFloat(this.value); document.getElementById('speedVal2').textContent=speed2.toFixed(1)+'×';
+    });
+    document.getElementById('trail2').addEventListener('input', function(){
+      trail2=parseFloat(this.value); document.getElementById('trailVal2').textContent=trail2.toFixed(1)+' s';
     });
 
-    document.getElementById('trail').addEventListener('input', function() {
-      trailDur = parseFloat(this.value);
-      document.getElementById('trailVal').textContent = trailDur.toFixed(1) + ' s';
+    // ── SYNC CONTROLS ───────────────────────────────────────────────
+    let syncPlaying = true;
+    document.getElementById('btnSyncPlay').addEventListener('click', function(){
+      syncPlaying=!syncPlaying;
+      play1=syncPlaying; play2=syncPlaying;
+      document.getElementById('btnPlay1').textContent=play1?'⏸ Pausar':'▶ Reanudar';
+      document.getElementById('btnPlay2').textContent=play2?'⏸ Pausar':'▶ Reanudar';
+      this.textContent=syncPlaying?'⏸ Pausar ambas':'▶ Reanudar ambas';
     });
+    document.getElementById('btnSyncReset').addEventListener('click', ()=>{ t1=0; t2=0; });
   </script>
 </body>
 </html>
