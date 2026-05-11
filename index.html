@@ -3,476 +3,343 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Respuesta Mano-Muñeca</title>
+  <title>Señales — Órtesis Muñeca-Mano · Parkinson</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      background: #0a0e14;
-      color: #e0e6f0;
+      background: #0a0e14; color: #e0e6f0;
       font-family: 'Syne', sans-serif;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px 16px 48px;
-      gap: 32px;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 36px 16px 56px; gap: 0;
     }
+    header { text-align: center; margin-bottom: 36px; max-width: 680px; }
+    header h1 { font-size: clamp(17px,4vw,24px); font-weight:700; color:#e0e6f0; margin-bottom:8px; line-height:1.3; }
+    header p  { font-size:13px; color:#4a5568; letter-spacing:0.09em; text-transform:uppercase; }
 
-    header {
-      text-align: center;
-    }
+    .section { width:100%; max-width:740px; margin-bottom:40px; }
+    .section-label { display:flex; align-items:flex-start; gap:14px; margin-bottom:14px; }
+    .pill { flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; padding:4px 11px; border-radius:20px; margin-top:2px; }
+    .pill-1 { background:rgba(216,90,48,0.15);  color:#ff8c6b; border:1px solid rgba(216,90,48,0.3); }
+    .pill-2 { background:rgba(78,205,164,0.12); color:#4ecda4; border:1px solid rgba(78,205,164,0.25); }
+    .pill-3 { background:rgba(55,138,221,0.13); color:#7ab8f5; border:1px solid rgba(55,138,221,0.28); }
 
-    header h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(16px, 4vw, 22px);
-      font-weight: 700;
-      color: #e0e6f0;
-      letter-spacing: 0.02em;
-      margin-bottom: 6px;
-    }
+    .section-info h2  { font-size:clamp(13px,2.8vw,16px); font-weight:700; color:#e0e6f0; margin-bottom:4px; line-height:1.35; }
+    .section-info .eq { font-family:'JetBrains Mono',monospace; font-size:clamp(10px,2.2vw,12px); color:#4a5568; margin-bottom:5px; }
+    .section-info p   { font-size:12px; color:#4a5568; line-height:1.6; max-width:580px; }
 
-    header p {
-      font-size: 13px;
-      color: #4a5568;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
+    .card { background:#111820; border:1px solid #1e2a38; border-radius:16px; padding:20px; }
+    canvas { display:block; width:100%; border-radius:6px; }
 
-    .section {
-      width: 100%;
-      max-width: 720px;
-    }
+    .legend { display:flex; gap:14px; margin-top:12px; flex-wrap:wrap; }
+    .li  { display:flex; align-items:center; gap:6px; font-size:10px; color:#4a5568; font-family:'JetBrains Mono',monospace; }
+    .ll  { width:16px; height:2.5px; border-radius:1px; }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
+    .controls { display:flex; align-items:center; gap:14px; margin-top:14px; flex-wrap:wrap; }
+    .ctrl-group { display:flex; align-items:center; gap:8px; }
+    .ctrl-group label { font-size:10px; color:#4a5568; text-transform:uppercase; letter-spacing:0.1em; font-family:'JetBrains Mono',monospace; }
+    .val { font-family:'JetBrains Mono',monospace; font-size:12px; min-width:34px; }
 
-    .pill {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-    .pill-entrada {
-      background: rgba(216,90,48,0.15);
-      color: #ff8c6b;
-      border: 1px solid rgba(216,90,48,0.3);
-    }
-    .pill-salida {
-      background: rgba(78,205,164,0.12);
-      color: #4ecda4;
-      border: 1px solid rgba(78,205,164,0.25);
-    }
+    input[type=range] { -webkit-appearance:none; width:85px; height:3px; background:#1e2a38; border-radius:2px; outline:none; }
+    .r1::-webkit-slider-thumb { -webkit-appearance:none; width:13px; height:13px; border-radius:50%; background:#ff8c6b; cursor:pointer; }
+    .r2::-webkit-slider-thumb { -webkit-appearance:none; width:13px; height:13px; border-radius:50%; background:#4ecda4; cursor:pointer; }
+    .r3::-webkit-slider-thumb { -webkit-appearance:none; width:13px; height:13px; border-radius:50%; background:#7ab8f5; cursor:pointer; }
 
-    .section-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: clamp(10px, 2.5vw, 13px);
-      color: #6b7a90;
-      letter-spacing: 0.02em;
-    }
+    .btn { background:transparent; border:1px solid #1e2a38; font-family:'JetBrains Mono',monospace; font-size:11px; padding:6px 13px; border-radius:8px; cursor:pointer; letter-spacing:0.04em; transition:background 0.15s,border-color 0.15s; }
+    .btn-1{color:#ff8c6b;} .btn-1:hover{background:#1e2a38;border-color:#ff8c6b;}
+    .btn-2{color:#4ecda4;} .btn-2:hover{background:#1e2a38;border-color:#4ecda4;}
+    .btn-3{color:#7ab8f5;} .btn-3:hover{background:#1e2a38;border-color:#7ab8f5;}
 
-    .card {
-      background: #111820;
-      border: 1px solid #1e2a38;
-      border-radius: 16px;
-      padding: 20px;
-    }
+    .divider { width:100%; max-width:740px; height:1px; background:#1e2a38; margin-bottom:40px; }
 
-    canvas { display: block; width: 100%; border-radius: 6px; }
+    .sync-bar { width:100%; max-width:740px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:36px; }
+    .sync-bar span { font-size:11px; color:#4a5568; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:0.08em; }
+    .btn-sync { background:transparent; border:1px solid #1e2a38; color:#e0e6f0; font-family:'JetBrains Mono',monospace; font-size:11px; padding:6px 16px; border-radius:8px; cursor:pointer; transition:background 0.15s; }
+    .btn-sync:hover { background:#1e2a38; border-color:#6b7a90; }
 
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-top: 16px;
-      flex-wrap: wrap;
-    }
-
-    .ctrl-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .ctrl-group label {
-      font-size: 10px;
-      color: #4a5568;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    input[type=range] {
-      -webkit-appearance: none;
-      width: 90px;
-      height: 3px;
-      background: #1e2a38;
-      border-radius: 2px;
-      outline: none;
-    }
-    input[type=range].entrada::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 13px; height: 13px;
-      border-radius: 50%;
-      background: #ff8c6b;
-      cursor: pointer;
-    }
-    input[type=range].salida::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 13px; height: 13px;
-      border-radius: 50%;
-      background: #4ecda4;
-      cursor: pointer;
-    }
-
-    .val {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      min-width: 34px;
-    }
-    .val-entrada { color: #ff8c6b; }
-    .val-salida  { color: #4ecda4; }
-
-    .btn {
-      background: transparent;
-      border: 1px solid #1e2a38;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      padding: 6px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      letter-spacing: 0.04em;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .btn-entrada { color: #ff8c6b; }
-    .btn-entrada:hover { background: #1e2a38; border-color: #ff8c6b; }
-    .btn-salida  { color: #4ecda4; }
-    .btn-salida:hover  { background: #1e2a38; border-color: #4ecda4; }
-
-    .legend {
-      display: flex;
-      gap: 14px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 10px;
-      color: #4a5568;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .legend-dot { width: 9px; height: 9px; border-radius: 2px; }
-
-    .divider {
-      width: 100%;
-      max-width: 720px;
-      height: 1px;
-      background: #1e2a38;
-    }
-
-    .sync-bar {
-      width: 100%;
-      max-width: 720px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-    .sync-bar span {
-      font-size: 11px;
-      color: #4a5568;
-      font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .btn-sync {
-      background: transparent;
-      border: 1px solid #1e2a38;
-      color: #e0e6f0;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      padding: 7px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .btn-sync:hover { background: #1e2a38; border-color: #6b7a90; }
+    footer { width:100%; max-width:740px; border-top:1px solid #1e2a38; padding-top:20px; margin-top:12px; }
+    footer p { font-size:10px; color:#2e3a4e; line-height:1.7; }
+    footer a { color:#2e5a8e; text-decoration:none; }
+    footer a:hover { color:#378ADD; }
+    .ref-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:#253040; margin-bottom:6px; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Respuesta Mano-Muñeca</h1>
-    <p>Señal de entrada y señal de salida</p>
-  </header>
+<header>
+  <h1>Señales dinámicas del conjunto muñeca-mano<br>en pacientes con Parkinson</h1>
+  <p>Torque de entrada · Respuesta angular · Señal de vibración</p>
+</header>
 
-  <!-- SYNC CONTROLS -->
-  <div class="sync-bar">
-    <span>Control global</span>
-    <button class="btn-sync" id="btnSyncPlay">⏸ Pausar ambas</button>
-    <button class="btn-sync" id="btnSyncReset">↺ Reiniciar ambas</button>
-  </div>
+<div class="sync-bar">
+  <span>Control global</span>
+  <button class="btn-sync" id="btnSyncPlay">⏸ Pausar todas</button>
+  <button class="btn-sync" id="btnSyncReset">↺ Reiniciar todas</button>
+</div>
 
-  <!-- ENTRADA -->
-  <div class="section">
-    <div class="section-header">
-      <span class="pill pill-entrada">Entrada</span>
-      <span class="section-title">f(t) = 0.4 · sin(2π · 5.59 · t)</span>
-    </div>
-    <div class="card">
-      <div style="position:relative; width:100%; height:220px;">
-        <canvas id="c1"></canvas>
-      </div>
-      <div class="controls">
-        <button class="btn btn-entrada" id="btnPlay1">⏸ Pausar</button>
-        <div class="ctrl-group">
-          <label>Velocidad</label>
-          <input type="range" id="speed1" class="entrada" min="0.1" max="2" step="0.1" value="0.4">
-          <span class="val val-entrada" id="speedVal1">0.4×</span>
-        </div>
-        <div class="ctrl-group">
-          <label>Rastro</label>
-          <input type="range" id="trail1" class="entrada" min="0.5" max="3" step="0.5" value="1.5">
-          <span class="val val-entrada" id="trailVal1">1.5 s</span>
-        </div>
-      </div>
+<!-- SEÑAL 1 -->
+<div class="section">
+  <div class="section-label">
+    <span class="pill pill-1">Entrada</span>
+    <div class="section-info">
+      <h2>Torque sinusoidal aplicado a la muñeca</h2>
+      <div class="eq">f(t) = 0.4 · sin(2π · 5.59 · t)</div>
+      <p>Fuerza periódica de 5.59 Hz y amplitud 0.4 N·m que modela la perturbación vibratoria aplicada al conjunto mano-muñeca para caracterizar su respuesta dinámica.</p>
     </div>
   </div>
-
-  <div class="divider"></div>
-
-  <!-- SALIDA -->
-  <div class="section">
-    <div class="section-header">
-      <span class="pill pill-salida">Salida</span>
-      <span class="section-title">θ(t) = 0.13·e⁻³ᵗ·sin(2π·5·t) + 0.067·sin(2π·5.59·t)</span>
-    </div>
-    <div class="card">
-      <div style="position:relative; width:100%; height:220px;">
-        <canvas id="c2"></canvas>
+  <div class="card">
+    <div style="position:relative;width:100%;height:200px;"><canvas id="c1"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-1" id="p1">⏸ Pausar</button>
+      <div class="ctrl-group">
+        <label>Velocidad</label>
+        <input type="range" id="s1" class="r1" min="0.1" max="2" step="0.1" value="0.4">
+        <span class="val" id="sv1" style="color:#ff8c6b;">0.4×</span>
       </div>
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-dot" style="background:#4ecda4;"></div>θ(t)
-        </div>
-        <div class="legend-item">
-          <div class="legend-dot" style="background:rgba(100,160,255,0.4); border:1px solid rgba(100,160,255,0.4);"></div>Envolvente ±0.13·e⁻³ᵗ
-        </div>
-      </div>
-      <div class="controls">
-        <button class="btn btn-salida" id="btnPlay2">⏸ Pausar</button>
-        <button class="btn btn-salida" id="btnReset2">↺ Reiniciar</button>
-        <div class="ctrl-group">
-          <label>Velocidad</label>
-          <input type="range" id="speed2" class="salida" min="0.1" max="2" step="0.1" value="0.4">
-          <span class="val val-salida" id="speedVal2">0.4×</span>
-        </div>
-        <div class="ctrl-group">
-          <label>Rastro</label>
-          <input type="range" id="trail2" class="salida" min="0.5" max="4" step="0.5" value="2">
-          <span class="val val-salida" id="trailVal2">2.0 s</span>
-        </div>
+      <div class="ctrl-group">
+        <label>Rastro</label>
+        <input type="range" id="t1" class="r1" min="0.5" max="3" step="0.5" value="1.5">
+        <span class="val" id="tv1" style="color:#ff8c6b;">1.5 s</span>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    // ── CANVAS 1 — ENTRADA ──────────────────────────────────────────
-    const c1 = document.getElementById('c1');
-    const ctx1 = c1.getContext('2d');
-    let t1 = 0, play1 = true, speed1 = 0.4, trail1 = 1.5;
+<div class="divider"></div>
 
-    function resizeCanvas(canvas) {
-      canvas.width  = canvas.parentElement.offsetWidth;
-      canvas.height = canvas.parentElement.offsetHeight;
-    }
-    resizeCanvas(c1);
+<!-- SEÑAL 2 -->
+<div class="section">
+  <div class="section-label">
+    <span class="pill pill-2">Salida</span>
+    <div class="section-info">
+      <h2>Desplazamiento angular de la mano-muñeca</h2>
+      <div class="eq">θ(t) = 0.13·e⁻³ᵗ·sin(2π·5·t) + 0.067·sin(2π·5.59·t)</div>
+      <p>Respuesta del sistema ante el torque aplicado: una componente transitoria amortiguada (e⁻³ᵗ) que decae hasta la vibración estacionaria en régimen permanente.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div style="position:relative;width:100%;height:200px;"><canvas id="c2"></canvas></div>
+    <div class="legend">
+      <div class="li"><div class="ll" style="background:#4ecda4;"></div>θ(t) total</div>
+      <div class="li"><div class="ll" style="background:rgba(100,160,255,0.5);border:1px solid rgba(100,160,255,0.4);"></div>envolvente ±0.13·e⁻³ᵗ</div>
+    </div>
+    <div class="controls">
+      <button class="btn btn-2" id="p2">⏸ Pausar</button>
+      <button class="btn btn-2" id="r2">↺ Reiniciar</button>
+      <div class="ctrl-group">
+        <label>Velocidad</label>
+        <input type="range" id="s2" class="r2" min="0.1" max="2" step="0.1" value="0.4">
+        <span class="val" id="sv2" style="color:#4ecda4;">0.4×</span>
+      </div>
+      <div class="ctrl-group">
+        <label>Rastro</label>
+        <input type="range" id="t2" class="r2" min="0.5" max="4" step="0.5" value="2">
+        <span class="val" id="tv2" style="color:#4ecda4;">2.0 s</span>
+      </div>
+    </div>
+  </div>
+</div>
 
-    function drawEntrada() {
-      const W = c1.width, H = c1.height;
-      const pad = { l:52, r:14, t:12, b:30 };
-      const pw = W-pad.l-pad.r, ph = H-pad.t-pad.b;
-      ctx1.clearRect(0,0,W,H);
-      ctx1.fillStyle = '#0d1520'; ctx1.fillRect(0,0,W,H);
+<div class="divider"></div>
 
-      const toY = v => pad.t + ph/2 - (v/0.5)*(ph/2-4);
-      const tS = t1 - trail1;
+<!-- SEÑAL 3 -->
+<div class="section">
+  <div class="section-label">
+    <span class="pill pill-3">Vibración</span>
+    <div class="section-info">
+      <h2>Señal de vibración del temblor parkinsoniano</h2>
+      <div class="eq">y(t) = sin(2π·4.5·t) + sin(2π·5.5·t)</div>
+      <p>Superposición de dos frecuencias adyacentes que reproduce el fenómeno de batido característico del temblor en reposo (3–6 Hz). La envolvente ±2·|cos(2π·0.5·t)| evidencia la modulación de amplitud.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div style="position:relative;width:100%;height:200px;"><canvas id="c3"></canvas></div>
+    <div class="legend">
+      <div class="li"><div class="ll" style="background:#378ADD;"></div>sin(2π·4.5·t)</div>
+      <div class="li"><div class="ll" style="background:#D85A30;"></div>sin(2π·5.5·t)</div>
+      <div class="li"><div class="ll" style="background:#7ab8f5;height:3px;"></div>y(t) suma</div>
+      <div class="li"><div class="ll" style="border-top:1.5px dashed #555;background:transparent;"></div>envolvente</div>
+    </div>
+    <div class="controls">
+      <button class="btn btn-3" id="p3">⏸ Pausar</button>
+      <div class="ctrl-group">
+        <label>Velocidad</label>
+        <input type="range" id="s3" class="r3" min="0.1" max="2" step="0.1" value="0.4">
+        <span class="val" id="sv3" style="color:#7ab8f5;">0.4×</span>
+      </div>
+      <div class="ctrl-group">
+        <label>Rastro</label>
+        <input type="range" id="t3" class="r3" min="0.5" max="4" step="0.5" value="2">
+        <span class="val" id="tv3" style="color:#7ab8f5;">2.0 s</span>
+      </div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:#4a5568;font-family:'JetBrains Mono',monospace;">
+        <input type="checkbox" id="chkC" checked> componentes
+      </label>
+    </div>
+  </div>
+</div>
 
-      // grid
-      ctx1.strokeStyle='rgba(255,255,255,0.05)'; ctx1.lineWidth=0.5;
-      [-0.4,-0.2,0,0.2,0.4].forEach(v=>{ ctx1.beginPath(); ctx1.moveTo(pad.l,toY(v)); ctx1.lineTo(pad.l+pw,toY(v)); ctx1.stroke(); });
+<footer>
+  <div class="ref-label">Fuente</div>
+  <p>Noel, A. L. C., Jr. (2024, 13 noviembre). <em>Diseño de una órtesis que compense las vibraciones del conjunto muñeca-mano en pacientes con Parkinson.</em> Pontificia Universidad Católica del Perú.<br>
+  <a href="https://tesis.pucp.edu.pe/items/aa502124-86b7-4c36-8207-7dadc244d061" target="_blank">https://tesis.pucp.edu.pe/items/aa502124-86b7-4c36-8207-7dadc244d061</a></p>
+</footer>
 
-      // axes
-      ctx1.strokeStyle='rgba(255,255,255,0.18)'; ctx1.lineWidth=1;
-      ctx1.beginPath(); ctx1.moveTo(pad.l,toY(0)); ctx1.lineTo(pad.l+pw,toY(0)); ctx1.stroke();
-      ctx1.beginPath(); ctx1.moveTo(pad.l,pad.t); ctx1.lineTo(pad.l,pad.t+ph); ctx1.stroke();
+<script>
+function mkCanvas(id){
+  const cv=document.getElementById(id), ctx=cv.getContext('2d');
+  function resize(){cv.width=cv.parentElement.offsetWidth;cv.height=cv.parentElement.offsetHeight;}
+  resize(); window.addEventListener('resize',resize);
+  return{cv,ctx};
+}
+const isDark=()=>matchMedia('(prefers-color-scheme: dark)').matches;
 
-      // Y labels
-      ctx1.fillStyle='rgba(255,255,255,0.3)'; ctx1.font='10px JetBrains Mono,monospace'; ctx1.textAlign='right';
-      [-0.4,-0.2,0,0.2,0.4].forEach(v=>{ ctx1.fillText(v.toFixed(1), pad.l-6, toY(v)+4); });
+function baseColors(){
+  const d=isDark();
+  return{bg:d?'#0d1117':'#ffffff',grid:d?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)',axis:d?'rgba(255,255,255,0.2)':'rgba(0,0,0,0.2)',lbl:d?'rgba(255,255,255,0.32)':'rgba(0,0,0,0.38)'};
+}
 
-      // Y title
-      ctx1.save(); ctx1.translate(12,H/2); ctx1.rotate(-Math.PI/2); ctx1.textAlign='center';
-      ctx1.fillStyle='rgba(255,255,255,0.22)'; ctx1.font='10px Syne,sans-serif';
-      ctx1.fillText('Torque (N·m)',0,0); ctx1.restore();
+function drawBase(ctx,W,H,pad,gridVals,maxA){
+  const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+  const c=baseColors();
+  const toY=v=>pad.t+ph/2-(v/maxA)*(ph/2-3);
+  ctx.fillStyle=c.bg; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle=c.grid; ctx.lineWidth=0.5;
+  gridVals.forEach(v=>{ctx.beginPath();ctx.moveTo(pad.l,toY(v));ctx.lineTo(pad.l+pw,toY(v));ctx.stroke();});
+  ctx.strokeStyle=c.axis; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,toY(0));ctx.lineTo(pad.l+pw,toY(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+ph);ctx.stroke();
+  ctx.fillStyle=c.lbl; ctx.font='10px JetBrains Mono,monospace'; ctx.textAlign='right';
+  gridVals.forEach(v=>ctx.fillText(v%1===0?v:v.toFixed(2),pad.l-5,toY(v)+4));
+  return{pw,ph,toY};
+}
 
-      // wave
-      const steps = Math.min(2000,pw*2);
-      const g = ctx1.createLinearGradient(pad.l,0,pad.l+pw,0);
-      g.addColorStop(0,'rgba(255,107,74,0.1)'); g.addColorStop(1,'rgba(255,107,74,0.95)');
-      ctx1.beginPath(); ctx1.strokeStyle=g; ctx1.lineWidth=2; ctx1.lineJoin='round';
-      for(let i=0;i<=steps;i++){
-        const tVal=tS+(i/steps)*trail1;
-        const v=0.4*Math.sin(2*Math.PI*5.59*tVal);
-        const x=pad.l+(i/steps)*pw, y=toY(v);
-        i===0?ctx1.moveTo(x,y):ctx1.lineTo(x,y);
-      }
-      ctx1.stroke();
+function drawWave(ctx,fn,color,lw,steps,pad,pw,trail,t,toY){
+  const tS=t-trail;
+  ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=lw; ctx.lineJoin='round';
+  for(let i=0;i<=steps;i++){
+    const tv=tS+(i/steps)*trail;
+    const x=pad.l+(i/steps)*pw, y=toY(fn(tv));
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+}
 
-      // dot
-      const cv=0.4*Math.sin(2*Math.PI*5.59*t1);
-      ctx1.beginPath(); ctx1.arc(pad.l+pw,toY(cv),5,0,Math.PI*2); ctx1.fillStyle='#ff6b4a'; ctx1.fill();
+function drawDot(ctx,x,y,r,g,b){
+  ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fillStyle=`rgb(${r},${g},${b})`; ctx.fill();
+  ctx.beginPath(); ctx.arc(x,y,9,0,Math.PI*2); ctx.strokeStyle=`rgba(${r},${g},${b},0.3)`; ctx.lineWidth=1.5; ctx.stroke();
+}
 
-      // time
-      ctx1.fillStyle='rgba(255,255,255,0.22)'; ctx1.font='10px Syne,sans-serif'; ctx1.textAlign='center';
-      ctx1.fillText('Tiempo (s)', pad.l+pw/2, H-3);
-      ctx1.textAlign='right'; ctx1.fillStyle='#ff8c6b'; ctx1.font='11px JetBrains Mono,monospace';
-      ctx1.fillText('t = '+t1.toFixed(3)+' s', W-pad.r, pad.t+12);
-    }
+function drawFooter(ctx,t,W,H,pad,pw,color){
+  const c=baseColors();
+  ctx.fillStyle=c.lbl; ctx.font='10px Syne,sans-serif'; ctx.textAlign='center';
+  ctx.fillText('Tiempo (s)',pad.l+pw/2,H-3);
+  ctx.textAlign='right'; ctx.fillStyle=color; ctx.font='11px JetBrains Mono,monospace';
+  ctx.fillText('t = '+t.toFixed(3)+' s',W-pad.r,pad.t+12);
+}
 
-    // ── CANVAS 2 — SALIDA ───────────────────────────────────────────
-    const c2 = document.getElementById('c2');
-    const ctx2 = c2.getContext('2d');
-    let t2 = 0, play2 = true, speed2 = 0.4, trail2 = 2.0;
+// ── Canvas 1 ─────────────────────────────────────────────────────────
+const G1=mkCanvas('c1');
+let t1=0,pl1=true,sp1=0.4,tr1=1.5;
 
-    resizeCanvas(c2);
+function draw1(){
+  const W=G1.cv.width,H=G1.cv.height;
+  const pad={l:48,r:12,t:12,b:28};
+  const{pw,toY}=drawBase(G1.ctx,W,H,pad,[-0.4,-0.2,0,0.2,0.4],0.5);
+  const steps=Math.min(2000,pw*2);
+  const grd=G1.ctx.createLinearGradient(pad.l,0,pad.l+pw,0);
+  grd.addColorStop(0,'rgba(255,107,74,0.1)'); grd.addColorStop(1,'rgba(255,107,74,0.95)');
+  drawWave(G1.ctx,tv=>0.4*Math.sin(2*Math.PI*5.59*tv),grd,2,steps,pad,pw,tr1,t1,toY);
+  drawDot(G1.ctx,pad.l+pw,toY(0.4*Math.sin(2*Math.PI*5.59*t1)),255,107,74);
+  drawFooter(G1.ctx,t1,W,H,pad,pw,'#ff8c6b');
+}
 
-    function theta(t){ return 0.13*Math.exp(-3*t)*Math.sin(2*Math.PI*5*t)+0.067*Math.sin(2*Math.PI*5.59*t); }
+// ── Canvas 2 ─────────────────────────────────────────────────────────
+const G2=mkCanvas('c2');
+let t2=0,pl2=true,sp2=0.4,tr2=2.0;
+function theta(t){return 0.13*Math.exp(-3*t)*Math.sin(2*Math.PI*5*t)+0.067*Math.sin(2*Math.PI*5.59*t);}
 
-    function drawSalida() {
-      const W=c2.width, H=c2.height;
-      const pad={l:56,r:14,t:12,b:30};
-      const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
-      ctx2.clearRect(0,0,W,H);
-      ctx2.fillStyle='#0d1520'; ctx2.fillRect(0,0,W,H);
+function draw2(){
+  const W=G2.cv.width,H=G2.cv.height;
+  const pad={l:52,r:12,t:12,b:28};
+  const{pw,toY}=drawBase(G2.ctx,W,H,pad,[-0.10,-0.05,0,0.05,0.10],0.15);
+  const eS=Math.min(800,pw), tS=t2-tr2;
+  G2.ctx.beginPath();
+  for(let i=0;i<=eS;i++){const tv=tS+(i/eS)*tr2;const e=0.13*Math.exp(-3*Math.max(tv,0));const x=pad.l+(i/eS)*pw;i===0?G2.ctx.moveTo(x,toY(e)):G2.ctx.lineTo(x,toY(e));}
+  for(let i=eS;i>=0;i--){const tv=tS+(i/eS)*tr2;const e=0.13*Math.exp(-3*Math.max(tv,0));G2.ctx.lineTo(pad.l+(i/eS)*pw,toY(-e));}
+  G2.ctx.closePath(); G2.ctx.fillStyle='rgba(100,160,255,0.07)'; G2.ctx.fill();
+  G2.ctx.strokeStyle='rgba(100,160,255,0.22)'; G2.ctx.lineWidth=1; G2.ctx.setLineDash([3,4]);
+  [1,-1].forEach(sg=>{
+    G2.ctx.beginPath();
+    for(let i=0;i<=eS;i++){const tv=tS+(i/eS)*tr2;const e=sg*0.13*Math.exp(-3*Math.max(tv,0));const x=pad.l+(i/eS)*pw;i===0?G2.ctx.moveTo(x,toY(e)):G2.ctx.lineTo(x,toY(e));}
+    G2.ctx.stroke();
+  });
+  G2.ctx.setLineDash([]);
+  const steps=Math.min(2000,pw*2);
+  const grd=G2.ctx.createLinearGradient(pad.l,0,pad.l+pw,0);
+  grd.addColorStop(0,'rgba(78,205,164,0.1)'); grd.addColorStop(1,'rgba(78,205,164,0.95)');
+  drawWave(G2.ctx,tv=>tv<0?0:theta(tv),grd,2,steps,pad,pw,tr2,t2,toY);
+  drawDot(G2.ctx,pad.l+pw,toY(t2<0?0:theta(t2)),78,205,164);
+  drawFooter(G2.ctx,t2,W,H,pad,pw,'#4ecda4');
+}
 
-      const maxV=0.15;
-      const toY=v=>pad.t+ph/2-(v/maxV)*(ph/2-4);
-      const tS=t2-trail2;
+// ── Canvas 3 ─────────────────────────────────────────────────────────
+const G3=mkCanvas('c3');
+let t3=0,pl3=true,sp3=0.4,tr3=2.0,showComp=true;
 
-      // grid
-      ctx2.strokeStyle='rgba(255,255,255,0.05)'; ctx2.lineWidth=0.5;
-      [-0.10,-0.05,0,0.05,0.10].forEach(v=>{ ctx2.beginPath(); ctx2.moveTo(pad.l,toY(v)); ctx2.lineTo(pad.l+pw,toY(v)); ctx2.stroke(); });
+function draw3(){
+  const W=G3.cv.width,H=G3.cv.height;
+  const pad={l:44,r:12,t:12,b:28};
+  const{pw,toY}=drawBase(G3.ctx,W,H,pad,[-2,-1,0,1,2],2.2);
+  const steps=Math.min(3000,pw*2);
+  if(showComp){
+    drawWave(G3.ctx,tv=>Math.sin(2*Math.PI*4.5*tv),'rgba(55,138,221,0.55)',1.2,steps,pad,pw,tr3,t3,toY);
+    drawWave(G3.ctx,tv=>Math.sin(2*Math.PI*5.5*tv),'rgba(216,90,48,0.55)',1.2,steps,pad,pw,tr3,t3,toY);
+  }
+  G3.ctx.setLineDash([5,4]);
+  drawWave(G3.ctx,tv=>2*Math.abs(Math.cos(2*Math.PI*0.5*tv)),'rgba(150,150,150,0.4)',1,steps,pad,pw,tr3,t3,toY);
+  drawWave(G3.ctx,tv=>-2*Math.abs(Math.cos(2*Math.PI*0.5*tv)),'rgba(150,150,150,0.4)',1,steps,pad,pw,tr3,t3,toY);
+  G3.ctx.setLineDash([]);
+  const grd=G3.ctx.createLinearGradient(pad.l,0,pad.l+pw,0);
+  grd.addColorStop(0,'rgba(122,184,245,0.1)'); grd.addColorStop(1,'rgba(122,184,245,0.95)');
+  drawWave(G3.ctx,tv=>Math.sin(2*Math.PI*4.5*tv)+Math.sin(2*Math.PI*5.5*tv),grd,2.2,steps,pad,pw,tr3,t3,toY);
+  drawDot(G3.ctx,pad.l+pw,toY(Math.sin(2*Math.PI*4.5*t3)+Math.sin(2*Math.PI*5.5*t3)),122,184,245);
+  drawFooter(G3.ctx,t3,W,H,pad,pw,'#7ab8f5');
+}
 
-      // axes
-      ctx2.strokeStyle='rgba(255,255,255,0.18)'; ctx2.lineWidth=1;
-      ctx2.beginPath(); ctx2.moveTo(pad.l,toY(0)); ctx2.lineTo(pad.l+pw,toY(0)); ctx2.stroke();
-      ctx2.beginPath(); ctx2.moveTo(pad.l,pad.t); ctx2.lineTo(pad.l,pad.t+ph); ctx2.stroke();
+// ── Loop ─────────────────────────────────────────────────────────────
+function loop(){
+  if(pl1) t1+=(1/60)*sp1;
+  if(pl2) t2+=(1/60)*sp2;
+  if(pl3) t3+=(1/60)*sp3;
+  draw1(); draw2(); draw3();
+  requestAnimationFrame(loop);
+}
+loop();
 
-      // Y labels
-      ctx2.fillStyle='rgba(255,255,255,0.3)'; ctx2.font='10px JetBrains Mono,monospace'; ctx2.textAlign='right';
-      [-0.10,-0.05,0,0.05,0.10].forEach(v=>{ ctx2.fillText(v.toFixed(2), pad.l-6, toY(v)+4); });
+// ── Controls ─────────────────────────────────────────────────────────
+document.getElementById('p1').addEventListener('click',function(){pl1=!pl1;this.textContent=pl1?'⏸ Pausar':'▶ Reanudar';});
+document.getElementById('s1').addEventListener('input',function(){sp1=parseFloat(this.value);document.getElementById('sv1').textContent=sp1.toFixed(1)+'×';});
+document.getElementById('t1').addEventListener('input',function(){tr1=parseFloat(this.value);document.getElementById('tv1').textContent=tr1.toFixed(1)+' s';});
 
-      // Y title
-      ctx2.save(); ctx2.translate(13,H/2); ctx2.rotate(-Math.PI/2); ctx2.textAlign='center';
-      ctx2.fillStyle='rgba(255,255,255,0.22)'; ctx2.font='10px Syne,sans-serif';
-      ctx2.fillText('Desplaz. angular (rad)',0,0); ctx2.restore();
+document.getElementById('p2').addEventListener('click',function(){pl2=!pl2;this.textContent=pl2?'⏸ Pausar':'▶ Reanudar';});
+document.getElementById('r2').addEventListener('click',()=>{t2=0;});
+document.getElementById('s2').addEventListener('input',function(){sp2=parseFloat(this.value);document.getElementById('sv2').textContent=sp2.toFixed(1)+'×';});
+document.getElementById('t2').addEventListener('input',function(){tr2=parseFloat(this.value);document.getElementById('tv2').textContent=tr2.toFixed(1)+' s';});
 
-      // envelope fill
-      const eS=Math.min(800,pw);
-      ctx2.beginPath();
-      for(let i=0;i<=eS;i++){ const tv=tS+(i/eS)*trail2; const e=0.13*Math.exp(-3*Math.max(tv,0)); ctx2.lineTo(pad.l+(i/eS)*pw,toY(e)); if(i===0)ctx2.moveTo(pad.l,toY(e)); }
-      for(let i=eS;i>=0;i--){ const tv=tS+(i/eS)*trail2; const e=0.13*Math.exp(-3*Math.max(tv,0)); ctx2.lineTo(pad.l+(i/eS)*pw,toY(-e)); }
-      ctx2.closePath(); ctx2.fillStyle='rgba(100,160,255,0.07)'; ctx2.fill();
+document.getElementById('p3').addEventListener('click',function(){pl3=!pl3;this.textContent=pl3?'⏸ Pausar':'▶ Reanudar';});
+document.getElementById('s3').addEventListener('input',function(){sp3=parseFloat(this.value);document.getElementById('sv3').textContent=sp3.toFixed(1)+'×';});
+document.getElementById('t3').addEventListener('input',function(){tr3=parseFloat(this.value);document.getElementById('tv3').textContent=tr3.toFixed(1)+' s';});
+document.getElementById('chkC').addEventListener('change',function(){showComp=this.checked;});
 
-      // envelope dashed border
-      ctx2.strokeStyle='rgba(100,160,255,0.22)'; ctx2.lineWidth=1; ctx2.setLineDash([3,4]);
-      [1,-1].forEach(sign=>{
-        ctx2.beginPath();
-        for(let i=0;i<=eS;i++){ const tv=tS+(i/eS)*trail2; const e=sign*0.13*Math.exp(-3*Math.max(tv,0)); const x=pad.l+(i/eS)*pw; i===0?ctx2.moveTo(x,toY(e)):ctx2.lineTo(x,toY(e)); }
-        ctx2.stroke();
-      });
-      ctx2.setLineDash([]);
-
-      // wave
-      const steps=Math.min(2000,pw*2);
-      const g=ctx2.createLinearGradient(pad.l,0,pad.l+pw,0);
-      g.addColorStop(0,'rgba(78,205,164,0.1)'); g.addColorStop(1,'rgba(78,205,164,0.95)');
-      ctx2.beginPath(); ctx2.strokeStyle=g; ctx2.lineWidth=2; ctx2.lineJoin='round';
-      for(let i=0;i<=steps;i++){
-        const tVal=tS+(i/steps)*trail2;
-        const v=tVal<0?0:theta(tVal);
-        const x=pad.l+(i/steps)*pw, y=toY(v);
-        i===0?ctx2.moveTo(x,y):ctx2.lineTo(x,y);
-      }
-      ctx2.stroke();
-
-      // dot
-      const cv=t2<0?0:theta(t2);
-      ctx2.beginPath(); ctx2.arc(pad.l+pw,toY(cv),5,0,Math.PI*2); ctx2.fillStyle='#4ecda4'; ctx2.fill();
-      ctx2.beginPath(); ctx2.arc(pad.l+pw,toY(cv),9,0,Math.PI*2); ctx2.strokeStyle='rgba(78,205,164,0.3)'; ctx2.lineWidth=1.5; ctx2.stroke();
-
-      // time
-      ctx2.fillStyle='rgba(255,255,255,0.22)'; ctx2.font='10px Syne,sans-serif'; ctx2.textAlign='center';
-      ctx2.fillText('Tiempo (s)', pad.l+pw/2, H-3);
-      ctx2.textAlign='right'; ctx2.fillStyle='#4ecda4'; ctx2.font='11px JetBrains Mono,monospace';
-      ctx2.fillText('t = '+t2.toFixed(3)+' s', W-pad.r, pad.t+12);
-    }
-
-    // ── LOOP ────────────────────────────────────────────────────────
-    function loop() {
-      if(play1) t1 += (1/60)*speed1;
-      if(play2) t2 += (1/60)*speed2;
-      drawEntrada();
-      drawSalida();
-      requestAnimationFrame(loop);
-    }
-    loop();
-
-    window.addEventListener('resize', ()=>{ resizeCanvas(c1); resizeCanvas(c2); });
-
-    // ── CONTROLS ENTRADA ────────────────────────────────────────────
-    document.getElementById('btnPlay1').addEventListener('click', function(){
-      play1=!play1; this.textContent=play1?'⏸ Pausar':'▶ Reanudar';
-    });
-    document.getElementById('speed1').addEventListener('input', function(){
-      speed1=parseFloat(this.value); document.getElementById('speedVal1').textContent=speed1.toFixed(1)+'×';
-    });
-    document.getElementById('trail1').addEventListener('input', function(){
-      trail1=parseFloat(this.value); document.getElementById('trailVal1').textContent=trail1.toFixed(1)+' s';
-    });
-
-    // ── CONTROLS SALIDA ─────────────────────────────────────────────
-    document.getElementById('btnPlay2').addEventListener('click', function(){
-      play2=!play2; this.textContent=play2?'⏸ Pausar':'▶ Reanudar';
-    });
-    document.getElementById('btnReset2').addEventListener('click', ()=>{ t2=0; });
-    document.getElementById('speed2').addEventListener('input', function(){
-      speed2=parseFloat(this.value); document.getElementById('speedVal2').textContent=speed2.toFixed(1)+'×';
-    });
-    document.getElementById('trail2').addEventListener('input', function(){
-      trail2=parseFloat(this.value); document.getElementById('trailVal2').textContent=trail2.toFixed(1)+' s';
-    });
-
-    // ── SYNC CONTROLS ───────────────────────────────────────────────
-    let syncPlaying = true;
-    document.getElementById('btnSyncPlay').addEventListener('click', function(){
-      syncPlaying=!syncPlaying;
-      play1=syncPlaying; play2=syncPlaying;
-      document.getElementById('btnPlay1').textContent=play1?'⏸ Pausar':'▶ Reanudar';
-      document.getElementById('btnPlay2').textContent=play2?'⏸ Pausar':'▶ Reanudar';
-      this.textContent=syncPlaying?'⏸ Pausar ambas':'▶ Reanudar ambas';
-    });
-    document.getElementById('btnSyncReset').addEventListener('click', ()=>{ t1=0; t2=0; });
-  </script>
+let syncPlay=true;
+document.getElementById('btnSyncPlay').addEventListener('click',function(){
+  syncPlay=!syncPlay; pl1=pl2=pl3=syncPlay;
+  ['p1','p2','p3'].forEach(id=>{document.getElementById(id).textContent=syncPlay?'⏸ Pausar':'▶ Reanudar';});
+  this.textContent=syncPlay?'⏸ Pausar todas':'▶ Reanudar todas';
+});
+document.getElementById('btnSyncReset').addEventListener('click',()=>{t1=0;t2=0;t3=0;});
+</script>
 </body>
 </html>
